@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+{% block page_content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+	<h1 class="h1">{{header}}</h1>
+  </div>
+
+    <div class="modal modal-alert position-static d-block bg-secondary py-5" tabindex="-1" role="dialog" id="modalChoice">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content rounded-3 shadow">
+            <form method="post" action="">
+                {% csrf_token %}
+            <div class="modal-body p-4 text-center">
+              <h5 class="mb-0">Are you sure you want to delete?</h5>
+              <p class="mb-0">You can't get this item back if deleted.</p>
+            </div>
+            <div class="modal-footer flex-nowrap p-0">
+              <button type="submit" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end"><strong class="text-danger">Yes, delete</strong></button>
+              <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0" data-bs-dismiss="modal"> <a href="{% url 'list_item' %}">Cancel</a></button>
+            </div>
+        </form>
+          </div>
+        </div>
+      </div>
+
+  
+	
+
+	{% endblock %}

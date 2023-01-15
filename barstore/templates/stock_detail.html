@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+{% block page_content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <a href='{% url 'issue_items' queryset.id %}'><div class='btn btn-success'>ISSUE THIS ITEM</div></a>
+  <h1 class="h1">{{title}}</h1>
+<a href='{% url 'receive_items' queryset.id %}'><div class='btn btn-primary'>RECEIVE THIS ITEM</div></a>
+  </div>
+  {% if messages %}
+  <div class="modal-body p-4 text-center bg-primary">
+    {% for message in messages %}
+    <h5 {% if message.tags %} class="{{ message.tags }} mb-0 text-white"{% endif %}>{{ message }}</h5>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+        <br><br>
+        <div class="display_table">
+          <table class='table'>
+                  <tr>
+                    <th>ITEM NAME</th>
+                    <th>QUANTITY IN STORE</th>
+                    <th>LAST UPDATED</th>
+                    <th>REORDER LEVEL</th>
+                  </tr>
+                  <tr>
+                    <td>{{queryset.item_name}}</td>
+                    <td>{{queryset.quantity}}</td>
+                    <td>{{queryset.last_updated}}</td>
+                    <td>{{queryset.reorder_level}}</td>
+                  </tr>
+          </table>
+        </div>
+
+ 
+        {% endblock %}       

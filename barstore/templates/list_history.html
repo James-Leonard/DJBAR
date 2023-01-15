@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+{% block page_content %}
+
+
+      {% if messages %}
+      <div class="modal-body p-4 text-center bg-primary">
+        {% for message in messages %}
+        <h5 {% if message.tags %} class="{{ message.tags }} mb-0 text-white"{% endif %}>{{ message }}</h5>
+        {% endfor %}
+      </div>
+      {% endif %}
+ 
+
+
+
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+	<h1 class="h1">{{header}}</h1>
+  </div>
+<br>
+  
+<div class="display_table">
+    <table class='table'>
+      <thead>
+        <tr>
+          <th>COUNT</th>
+          <th>ID</th>
+          <th>CATEGORY</th>
+          <th>ITEM NAME</th>
+          <th>QUANTITY IN STORE</th>
+          <th>ISSUE QUANTITY</th>
+          <th>RECEIVE QUANTITY</th>
+          <th>LAST UPDATED</th>
+        </tr>
+      </thead>
+    {% for instance in queryset %}
+        <tr>
+
+          <td>{{forloop.counter}}</td>
+          <td>{{instance.id}}</td>
+          <td>{{instance.category}}</td>
+          <td>{{instance.item_name}}</td>
+          <td>{{instance.quantity}}</td>
+          <td>{{instance.issue_quantity}}</td>
+          <td>{{instance.receive_quantity}}</td>
+          <td>{{instance.last_updated}}</td>
+        </tr>
+    {% endfor %}
+  </table>
+</div>
+
+	{% endblock %}
