@@ -25,7 +25,7 @@ def issue_items(request, pk):
         instance.save()
         messages.success(request, "Sold SUCCESSFULLY.         " + str(instance.quantity) +
                          " " + str(instance.item_name) + "s now left in Store")
-        return redirect('stock_detail/'+str(instance.id))
+        return redirect('list_item')
         # return HttpResponseRedirect(instance.get_absolute_url())
 
     context = {
@@ -49,7 +49,7 @@ def receive_items(request, pk):
         messages.success(request, "Received SUCCESSFULLY. " +
                          str(instance.quantity) + " " + str(instance.item_name)+"s now in Store")
 
-        return redirect('stock_detail/'+str(instance.id))
+        return redirect('list_item')
         # return HttpResponseRedirect(instance.get_absolute_url())
     context = {
         "title": 'Reaceive ' + str(queryset.item_name),
