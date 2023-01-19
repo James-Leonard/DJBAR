@@ -158,4 +158,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 ACCOUNT_ACTIVATION_DAYS = 2  # One-week activation window
 REGISTRATION_AUTO_LOGIN = True  # Automatically log the user in.
 SITE_ID = 1
-LOGIN_REDIRECT_URL = '/barstore/'
+LOGIN_REDIRECT_URL = '/'
