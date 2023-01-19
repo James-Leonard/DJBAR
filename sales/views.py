@@ -25,7 +25,7 @@ def issue_items(request, pk):
         instance.save()
         messages.success(request, "Sold SUCCESSFULLY.         " + str(instance.quantity) +
                          " " + str(instance.item_name) + "s now left in Store")
-        return redirect('/barstore/stock_detail/'+str(instance.id))
+        return redirect('stock_detail/'+str(instance.id))
         # return HttpResponseRedirect(instance.get_absolute_url())
 
     context = {
@@ -49,7 +49,7 @@ def receive_items(request, pk):
         messages.success(request, "Received SUCCESSFULLY. " +
                          str(instance.quantity) + " " + str(instance.item_name)+"s now in Store")
 
-        return redirect('/barstore/stock_detail/'+str(instance.id))
+        return redirect('stock_detail/'+str(instance.id))
         # return HttpResponseRedirect(instance.get_absolute_url())
     context = {
         "title": 'Reaceive ' + str(queryset.item_name),
@@ -132,7 +132,7 @@ def reorder_level(request, pk):
         messages.success(request, "Reorder level for " + str(instance.item_name) +
                          " is updated to " + str(instance.reorder_level))
 
-        return redirect('/barstore/list_item')
+        return redirect('list_item')
     context = {
         "instance": queryset,
         "form": form,
@@ -153,7 +153,7 @@ def damage_items(request, pk):
                          " " + str(instance.item_name) + "s now left in Store")
         instance.save()
 
-        return redirect('/barstore/stock_detail/'+str(instance.id))
+        return redirect('stock_detail/'+str(instance.id))
         # return HttpResponseRedirect(instance.get_absolute_url())
 
     context = {

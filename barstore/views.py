@@ -81,7 +81,7 @@ def add_items(request):
     if form.is_valid():
         form.save()
         messages.success(request, 'Successfully Added')
-        return redirect('../list_item')
+        return redirect('list_item')
 
     context = {
         "form": form,
@@ -101,7 +101,7 @@ def update_items(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Updated Successfully')
-            return redirect('/barstore/list_item')
+            return redirect('list_item')
 
     context = {
         'form': form,
@@ -117,7 +117,7 @@ def delete_items(request, pk):
     if request.method == 'POST':
         queryset.delete()
         messages.success(request, 'Deleted Successfully')
-        return redirect('/barstore/list_item')
+        return redirect('list_item')
     return render(request, 'delete_items.html')
 
 
@@ -137,7 +137,7 @@ def add_category(request):
     if form.is_valid():
         form.save()
         messages.success(request, 'Successfully Created')
-        return redirect('/barstore/list_item')
+        return redirect('list_item')
     context = {
         "form": form,
         "title": "Add Category",
