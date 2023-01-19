@@ -44,8 +44,8 @@ class StockUpdateForm(forms.ModelForm):
 
 class StockHistorySearchForm(forms.ModelForm):
     export_to_CSV = forms.BooleanField(required=False)
-    start_date = forms.DateTimeField(required=False)
-    end_date = forms.DateTimeField(required=False)
+    start_date = forms.DateTimeField(required=True)
+    end_date = forms.DateTimeField(required=True)
 
     class Meta:
         model = StockHistory
