@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path  # include
+from django.urls import path, include
 from barstore import views
 
 
@@ -33,5 +33,5 @@ urlpatterns = [
     path('reorder_level/<str:pk>/', views.reorder_level, name="reorder_level"),
     path('list_history/', views.list_history, name='list_history'),
     # path('barstore/', include('barstore.urls')),
-    # path('accounts/', include('registration.backends.default.urls')),
+    path('accounts/', include('registration.backends.default.urls')),
 ]
