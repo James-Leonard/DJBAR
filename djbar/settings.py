@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-sba!&9-p^cchwj@(wm=)b7vxku20)o8lrlkre9657+ak=lq)d_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'djbar-production.up.railway.app',
+                 'https://djbar-production.up.railway.app']
 
 
 # Application definition
