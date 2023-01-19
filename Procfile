@@ -1,0 +1,1 @@
+web: gunicorn 'djbar.wsgi'

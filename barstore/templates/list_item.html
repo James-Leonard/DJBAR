@@ -5,7 +5,7 @@
 
 {% block page_content %}
 
-
+<!-- THIS CODE HANDLE NOTIFICATION ON THIS PAGE-->
       {% if messages %}
       <div class="modal-body p-4 text-center bg-primary">
         {% for message in messages %}
@@ -14,56 +14,108 @@
       </div>
       {% endif %}
  
+<!---->
 
+<style>
 
+  .mybutton{
+    width: 100%;
+  }
+
+  /*Table paination styling*/
+.paging-nav {
+  text-align: right;
+  padding-top: 2px;
+  font-size: 20px;
+  padding-bottom: 10px;
+}
+
+.paging-nav a {
+  margin: auto 1px;
+  text-decoration: none;
+  display: inline-block;
+  padding: 1px 7px;
+  background: #0d6efd ;
+  color: white;
+  border-radius: 100px;
+}
+
+.paging-nav .selected-page {
+  font-weight: bold;
+  color: #dc3545;
+}
+/* End Table paination styling*/
+</style>
 
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-	<h1 class="h1">{{header}}</h1>
+	<h1 class="h1 mt-5">{{header}}</h1>
   </div>
-  <form method='POST' action=''>{% csrf_token %}
-    {{form|crispy}}
-        <input type="submit" value='Search'/>
-</form>
-<br>
-  
-        <div class="table-responsive">
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th scope="col">Count</th>
-                <th scope="col">Category</th>
-                <th scope="col">Item Name</th>
-                <th scope="col">Quantity in store</th>
-                <th scope="col">Reorder level</th>
-                <th scope="col">Timestamp</th>
-                <th scope="col">Last updated</th>
-                <th scope="col">Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-				{% for inventories in queryset %}
-				<tr>
-					<td>{{forloop.counter}}</td>
-					<td>{{inventories.category|title}}</td>
-					<td><a href="{% url 'update_items' inventories.id %}">{{inventories.item_name|title}}</a></td>
-          <td>
-            {% if inventories.quantity <= inventories.reorder_level %}
-              <div style="background-color: orange;">
-                <a href="{% url 'stock_detail' inventories.id %}">{{inventories.quantity}}</a>
-              </div>
-            {% else %}
+<div class="jumbotron mt-3">
+<div class="row"><!--Start of row-->
+
+  <div class="col-sm-2"><!--Start of first col-->
+      <form method='POST' action=''>{% csrf_token %}
+        {{form|crispy}}
+        <input class="btn btn-primary mybutton" type="submit" value='Search'/>
+      </form><br><br>
+      <br>
+      <a href="{% url 'add_items' %}"><div class="btn btn-primary mybutton">Add Items</div></a><br><br>
+      <a href="{% url 'list_history' %}"><div class="btn btn-primary mybutton">List History</div></a><br>
+      <br>
+  </div><!--End of first col-->
+
+  <div class="col-sm-10"><!--Start of second col-->
+    <div class="table-responsive">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            {% comment %} <th scope="col">Count</th> {% endcomment %}
+            <th scope="col">Category</th>
+            <th scope="col">Item Name</th>
+            <th scope="col">Quantity in store</th>
+            <th scope="col">Quantity Sold</th>
+            <th scope="col">Reorder level</th>
+            <th scope="col">Cost Per Item</th>
+            <th scope="col">Sales or Revenue</th>
+            <th scope="col">Damage</th>
+            {% comment %} <th scope="col">Timestamp</th> {% endcomment %}
+            <th scope="col">Last updated</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+    {% for inventories in queryset %}
+    <tr>
+      {% comment %} <td scope="row">{{forloop.counter}}</td> {% endcomment %}
+      <td scope="row">{{inventories.category|title}}</td>
+      <td scope="row"><a href="{% url 'update_items' inventories.id %}">{{inventories.item_name|title}}</a></td>
+      <td scope="row">
+        {% if inventories.quantity <= inventories.reorder_level %}
+          <div style="background-color: orange;">
             <a href="{% url 'stock_detail' inventories.id %}">{{inventories.quantity}}</a>
-            {% endif %}
-          </td>
-          <td><a href="{% url 'reorder_level' inventories.id %}">{{inventories.reorder_level}}</a></td>
-          <td>{{inventories.timestamp}}</td>
-          <td>{{inventories.last_updated}}</td>
-          <td><a href="{% url 'delete_items' inventories.id %}"><i data-feather="trash-2" class="text-danger" style="width:28px;height:28px;"></i></a></td>
-				  </tr>
-				{% endfor %}
-            </tbody>
-          </table>	    
-        </div>
+          </div>
+        {% else %}
+        <a href="{% url 'stock_detail' inventories.id %}">{{inventories.quantity}}</a>
+        {% endif %}
+      </td>
+      <td scope="row">{{ inventories.issue_quantity }}</td>
+      <td scope="row"><a href="{% url 'reorder_level' inventories.id %}">{{inventories.reorder_level}}</a></td>
+      <td scope="row">{{ inventories.cost_per_item }}</td>
+      <td scope="row">{{ inventories.sales }}</td>
+      <td scope="row">{{ inventories.quantity_damaged }}</td>
+      {% comment %} <td scope="row">{{inventories.timestamp}}</td> {% endcomment %}
+      <td scope="row">{{inventories.last_updated}}</td>
+      <td scope="row"><a href="{% url 'delete_items' inventories.id %}"><i data-feather="trash-2" class="text-danger" style="width:28px;height:28px;"></i></a></td>
+      </tr>
+    {% endfor %}
+        </tbody>
+      </table>	    
+    </div>
+  </div><!--End of second col-->
+
+</div><!--End of row-->
+</div>
+        
 
 	{% endblock %}

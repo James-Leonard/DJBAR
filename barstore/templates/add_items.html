@@ -8,18 +8,16 @@
 	<h1 class="h1">{{header}}</h1>
   </div>
 
-
-  
-	<div class="container flex-shrink-0">
-		<div class="jumbotron">
-		<form method='POST' action=''>{% csrf_token %}
-			{{form|crispy}}
-			<input type="submit" value='Save'/>
-		</form>
-	</div>
-	</div>
-
-  
-	
-
+  <div class="jumbotron">
+  <div class="row"><!--Start of row-->
+    <div class="col-sm-5"><!--Start of col-->
+       <div class="display_table">
+         <form method='POST' action=''>{% csrf_token %}
+           {{form|crispy}}
+           <input class="btn btn-primary mt-2" type="submit" value='Save'/>
+         </form>
+       </div>
+    </div><!--End of col-->
+</div><!--End of row-->
+</div>
 	{% endblock %}

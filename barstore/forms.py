@@ -1,12 +1,12 @@
 from django import forms
-from .models import Stock
+from .models import *
 
 
 # CUSTOMIZE THE ADMIN PORTAL FOR BETTER DATA VIEWING.
 class StockCreateForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['category', 'item_name', 'quantity']
+        fields = ['category', 'item_name', 'quantity', 'cost_per_item']
 
     # To prevent saving object with a blank category name.
     def clean_category(self):
@@ -14,10 +14,10 @@ class StockCreateForm(forms.ModelForm):
         if not category:
             raise forms.ValidationError('This field is required')
         # Alerting and preventing the duplicate entry of category name.
-        for inventories in Stock.objects.all():
-            if inventories.category == category:
-                raise forms.ValidationError(
-                    str(category) + ' is already created')
+        # for inventories in Stock.objects.all():
+        #     if inventories.category == category:
+        #         raise forms.ValidationError(
+        #             str(category) + ' is already created')
         return category
 
     # To prevent saving object with a blank item name.
@@ -28,6 +28,30 @@ class StockCreateForm(forms.ModelForm):
         return item_name
 
 
+class CategoryCreateForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+
+# Create form for updating data
+
+
+class StockUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Stock
+        fields = ['category', 'item_name', 'quantity', 'cost_per_item']
+
+
+class StockHistorySearchForm(forms.ModelForm):
+    export_to_CSV = forms.BooleanField(required=False)
+    start_date = forms.DateTimeField(required=False)
+    end_date = forms.DateTimeField(required=False)
+
+    class Meta:
+        model = StockHistory
+        fields = ['category', 'item_name', 'start_date', 'end_date']
+
+
 # Create a form to search category and item names
 class StockSearchForm(forms.ModelForm):
     export_to_CSV = forms.BooleanField(required=False)
@@ -35,28 +59,3 @@ class StockSearchForm(forms.ModelForm):
     class Meta:
         model = Stock
         fields = ['category', 'item_name']
-
-
-# Create form for updating data
-class StockUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Stock
-        fields = ['category', 'item_name', 'quantity']
-
-
-class IssueForm(forms.ModelForm):
-    class Meta:
-        model = Stock
-        fields = ['issue_quantity', 'issue_to']
-
-
-class ReceiveForm(forms.ModelForm):
-    class Meta:
-        model = Stock
-        fields = ['receive_quantity']
-
-
-class ReorderLevelForm(forms.ModelForm):
-    class Meta:
-        model = Stock
-        fields = ['reorder_level']

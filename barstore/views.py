@@ -5,9 +5,10 @@ import csv
 from django.contrib import messages
 from .models import *
 from .forms import *
+from sales.views import *
+
+
 # Display Landing Page.
-
-
 @login_required
 def home(request):
     title = 'Welcome: This is the Home Page'
@@ -20,14 +21,14 @@ def home(request):
 # List Out all the items from the database.
 @login_required
 def list_item(request):
-    header = 'List of Items'
+    header = 'List of Products'
 
     # this for search functionality.
     form = StockSearchForm(request.POST or None)
     #
     """
     The reason i wrote the search logic inside the list item block:
-        1. i want to search on the same page where my items are listed
+        1. we want to search on the same page where items are listed
 
 
     question for my future engineer:
@@ -46,10 +47,13 @@ def list_item(request):
 
     # create a condition for how the search wil work.
     if request.method == 'POST':
+        category = form['category'].value()
         queryset = Stock.objects.filter(  # category__icontains=form['category'].value(),
             item_name__icontains=form['item_name'].value(
             )
         )
+        if (category != ''):
+            queryset = queryset.filter(category_id=category)
         # Make an if condition that will export data to CSV
         if form['export_to_CSV'].value() == True:
             response = HttpResponse(content_type='text/csv')
@@ -128,79 +132,92 @@ def stock_detail(request, pk):
     return render(request, "stock_detail.html", context)
 
 
-# create
-@login_required
-def issue_items(request, pk):
-    queryset = Stock.objects.get(id=pk)
-    form = IssueForm(request.POST or None, instance=queryset)
+def add_category(request):
+    form = CategoryCreateForm(request.POST or None)
     if form.is_valid():
-        instance = form.save(commit=False)
-        instance.quantity -= instance.issue_quantity
-        messages.success(request, "Issued SUCCESSFULLY. " + str(instance.quantity) +
-                         " " + str(instance.item_name) + "s now left in Store")
-        instance.save()
-
-        return redirect('/barstore/stock_detail/'+str(instance.id))
-        # return HttpResponseRedirect(instance.get_absolute_url())
-
-    context = {
-        "title": 'Issue ' + str(queryset.item_name),
-        "queryset": queryset,
-        "form": form,
-        "username": 'Issue By: ' + str(request.user),
-    }
-    return render(request, "add_items.html", context)
-
-
-#
-@login_required
-def receive_items(request, pk):
-    queryset = Stock.objects.get(id=pk)
-    form = ReceiveForm(request.POST or None, instance=queryset)
-    if form.is_valid():
-        instance = form.save(commit=False)
-        instance.quantity += instance.receive_quantity
-        instance.save()
-        messages.success(request, "Received SUCCESSFULLY. " +
-                         str(instance.quantity) + " " + str(instance.item_name)+"s now in Store")
-
-        return redirect('/barstore/stock_detail/'+str(instance.id))
-        # return HttpResponseRedirect(instance.get_absolute_url())
-    context = {
-        "title": 'Reaceive ' + str(queryset.item_name),
-        "instance": queryset,
-        "form": form,
-        "username": 'Receive By: ' + str(request.user),
-    }
-    return render(request, "add_items.html", context)
-
-
-#
-@login_required
-def reorder_level(request, pk):
-    queryset = Stock.objects.get(id=pk)
-    form = ReorderLevelForm(request.POST or None, instance=queryset)
-    if form.is_valid():
-        instance = form.save(commit=False)
-        instance.save()
-        messages.success(request, "Reorder level for " + str(instance.item_name) +
-                         " is updated to " + str(instance.reorder_level))
-
+        form.save()
+        messages.success(request, 'Successfully Created')
         return redirect('/barstore/list_item')
     context = {
-        "instance": queryset,
         "form": form,
+        "title": "Add Category",
     }
-    return render(request, "add_items.html", context)
+    return render(request, "add_category.html", context)
 
 
-#
-@login_required
-def list_history(request):
-    header = 'LIST OF ITEMS'
-    queryset = StockHistory.objects.all()
-    context = {
-        "header": header,
-        "queryset": queryset,
-    }
-    return render(request, "list_history.html", context)
+'''CREATE TRIGGER after_barstore_stock_update AFTER UPDATE ON barstore_stock
+BEGIN
+		INSERT INTO barstore_stockhistory(
+			id, 
+			last_updated, 
+			category_id, 
+			item_name, 
+			quantity, 
+			receive_quantity, 
+			receive_by) 
+		VALUES(
+			new.id, 
+			new.last_updated, 
+			new.category_id, 
+			new.item_name, 
+			new.quantity, 
+			new.receive_quantity, 
+			new.receive_by);
+
+
+		INSERT INTO barstore_stockhistory(
+			id, 
+			last_updated, 
+			category_id, 
+			item_name, 
+			issue_quantity, 
+			issue_to, 
+			issue_by, 
+			quantity) 
+		VALUES(
+			new.id, 
+			new.last_updated, 
+			new.category_id, 
+			new.item_name, 
+			new.issue_quantity, 
+			new.issue_to, 
+			new.issue_by, 
+			new.quantity);
+
+END;'''
+
+
+'''CREATE TRIGGER after_barstore_stock_update AFTER UPDATE ON barstore_stock
+BEGIN
+		INSERT INTO barstore_stockhistory(
+			id, 
+			last_updated, 
+			category_id, 
+			item_name, 
+			quantity, 
+            cost_per_item,
+            sales ,
+            quantity_damaged
+			receive_quantity, 
+			receive_by,
+            issue_quantity, 
+			issue_to, 
+			issue_by, 
+			quantity) 
+		VALUES(
+			new.id, 
+			new.last_updated, 
+			new.category_id, 
+			new.item_name, 
+			new.quantity, 
+            new.cost_per_item,
+            new.sales,
+            new.quantity_damaged,
+			new.receive_quantity, 
+			new.receive_by,
+            new.issue_quantity, 
+			new.issue_to, 
+			new.issue_by, 
+			new.quantity);
+
+END;'''
